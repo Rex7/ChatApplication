@@ -56,13 +56,6 @@ public class MainActivity extends AppCompatActivity {
         collapsingToolbarLayout.setTitle("Chat Rooms");
         toolbar = (Toolbar) findViewById(R.id.toolBar);
         context = this;
-
-
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("Chat Rooms");
-        }
-
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         //setting a empty adpater
 

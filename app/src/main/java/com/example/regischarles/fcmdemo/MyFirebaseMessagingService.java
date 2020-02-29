@@ -28,17 +28,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         BuildNotification(remoteMessage);
         Intent pushNotification = new Intent("pushNotification");
+        String title=remoteMessage.getNotification().getTitle();
+        String messageBody=remoteMessage.getNotification().getBody();
+        String name=remoteMessage.getData().get("name");
+        Log.v("payloadDataDemo","pay"+name);
 
-        pushNotification.putExtra("message", remoteMessage.getData().get("message"));
-        pushNotification.putExtra("title", remoteMessage.getData().get("Title"));
+
+//        pushNotification.putExtra("message", remoteMessage.getData().get("message"));
+//        pushNotification.putExtra("title", remoteMessage.getData().get("Title"));
+//        pushNotification.putExtra("name", remoteMessage.getData().get("name"));
+        pushNotification.putExtra("message", messageBody);
+        pushNotification.putExtra("title", title);
+        pushNotification.putExtra("name", name);
         LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
     }
 
     private void BuildNotification(RemoteMessage remoteMessage) {
     Intent intent=new Intent(getApplicationContext(),MainActivity.class);
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        Log.v("payloadData",remoteMessage.getData().get("Title"));
-        Log.v("payloadData",remoteMessage.getData().get("message"));
+
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         PendingIntent pendingIntent=PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);

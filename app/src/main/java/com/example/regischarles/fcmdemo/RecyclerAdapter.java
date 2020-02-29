@@ -61,10 +61,11 @@ public class RecyclerAdapter  extends RecyclerView.Adapter<RecyclerAdapter.ViewH
             FirebaseMessaging.getInstance().subscribeToTopic(chatRooms.get(pos).getName()).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    Toast.makeText(ctx,"Success"+chatRooms.get(pos).getName(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(ctx,"Success"+chatRooms.get(pos).getName()+"chatroomId"+chatRooms.get(pos).getChatroomId(),Toast.LENGTH_LONG).show();
                     Intent intent=new Intent(ctx,ChatGroup.class);
                     intent.putExtra("chatRoom",chatRooms.get(pos).getName());
                     intent.putExtra("name",chatRooms.get(pos).getChatroomId());
+                    intent.putExtra("chatroomId",chatRooms.get(pos).getChatroomId());
                     ctx.startActivity(intent);
                 }
             });

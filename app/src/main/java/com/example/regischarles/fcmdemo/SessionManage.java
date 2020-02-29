@@ -35,7 +35,7 @@ public class SessionManage {
 
     public void checkLogin() {
         if (!this.isLogedIn()) {
-            context.startActivity(new Intent(context, HomePage.class));
+            context.startActivity(new Intent(context, LoginPage.class));
         }
     }
 

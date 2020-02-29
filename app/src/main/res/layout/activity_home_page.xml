@@ -4,7 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomePage">
+    tools:context=".LoginPage">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="false"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <include
+            android:id="@+id/toolBar"
+            layout="@layout/toolbar"
+            app:layout_scrollFlags="scroll|enterAlways"
+
+            />
+
+
+    </android.support.design.widget.AppBarLayout>
 
     <Button
         android:id="@+id/login"

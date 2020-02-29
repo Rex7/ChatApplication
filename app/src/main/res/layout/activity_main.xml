@@ -26,10 +26,9 @@
             <include
                 android:id="@+id/toolBar"
                 layout="@layout/toolbar"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-
-                />
+                app:layout_collapseMode="pin"/>
 
 
 

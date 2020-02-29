@@ -23,27 +23,29 @@ import java.util.Map;
 
 public class SendRequestToServer {
 
-    RequestQueue myRequestQueue = VolleySingle.getInstance().getRequestQueue();
-    Context ctx;
-    SessionManage sessionManage;
-    String userInput;
-    RecyclerView recyclerView;
-    ChatAdapter chatAdapter;
-    ArrayList<Message> chatMessages;
+    private RequestQueue myRequestQueue = VolleySingle.getInstance().getRequestQueue();
+    private Context ctx;
+    private SessionManage sessionManage;
+    private String userInput;
+     private RecyclerView recyclerView;
+    private  ChatAdapter chatAdapter;
+   private ArrayList<Message> chatMessages;
+    private int chatRoomId;
 
 public SendRequestToServer(){}
-    public SendRequestToServer(Context ctx ,SessionManage sessionManage,String userInput,RecyclerView recyclerView,ChatAdapter chatAdapter,ArrayList<Message>chatMessages) {
+    public SendRequestToServer(Context ctx ,SessionManage sessionManage,String userInput,RecyclerView recyclerView,ChatAdapter chatAdapter,ArrayList<Message>chatMessages,int chatRoomId) {
        this.ctx=ctx;
        this.sessionManage=sessionManage;
        this.userInput=userInput;
        this.chatMessages=chatMessages;
        this.recyclerView=recyclerView;
        this.chatAdapter=chatAdapter;
+       this.chatRoomId=chatRoomId;
     }
 
-    public void sendToServer(){
+   public void sendToServer(final int dataCount, final String chatRoomName){
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://rexmyapp.000webhostapp.com/notification.php", new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://rexmyapp.000webhostapp.com/not2.php", new Response.Listener<String>() {
 
 
             @Override
@@ -51,10 +53,12 @@ public SendRequestToServer(){}
               Log.v("ResponseServer",response);
               int userid=Integer.parseInt(sessionManage.getUserDetail().get("userId"));
               Log.v("payloadData",""+chatMessages.size());
-//             chatMessages.add(new Message(userid,userInput));
-//             chatAdapter.notifyDataSetChanged();
-//             recyclerView.smoothScrollToPosition(chatAdapter.getItemCount()-1);
-
+              if(dataCount==0){
+                  chatMessages.add((new Message(userid,userInput,sessionManage.getUserDetail().get("name"))));
+                  chatAdapter=new ChatAdapter(chatMessages,ctx);
+                  recyclerView.setAdapter(chatAdapter);
+                  chatAdapter.notifyDataSetChanged();
+              }
             }
 
 
@@ -68,7 +72,10 @@ public SendRequestToServer(){}
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> data = new HashMap<>();
                 data.put("chatMessage",userInput);
+                data.put("room",chatRoomName);
                 data.put("userId",sessionManage.getUserDetail().get("userId") );
+                data.put("name",sessionManage.getUserDetail().get("name"));
+                data.put("chatroom",String.valueOf(chatRoomId));
 
 
                 return data;
@@ -76,23 +83,6 @@ public SendRequestToServer(){}
             }
         };
         myRequestQueue.add(stringRequest);
-
-
-    }
-    public void notificationFromServer(String message,String userId){
-   if(chatMessages==null){
-       Log.v("payloadData","func"+userId);
-       Log.v("payloadData","func"+message);
-       Log.v("payloadData","its empty");
-       Log.v("payloadData",""+chatMessages.get(0).getMessage());
-
-   }
-   else{
-       chatMessages.add(new Message(Integer.parseInt(userId),message));
-       chatAdapter.notifyDataSetChanged();
-       recyclerView.smoothScrollToPosition(chatAdapter.getItemCount()-1);
-       Log.v("payloadData","its empty");
-   }
 
 
     }

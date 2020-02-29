@@ -5,20 +5,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ChatGroup">
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="false"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <include
+            android:id="@+id/toolbarChatGroup"
+            layout="@layout/toolbar"
+            app:layout_scrollFlags="scroll|enterAlways"
+
+            />
+
+
+    </android.support.design.widget.AppBarLayout>
     <android.support.v7.widget.RecyclerView
+        android:layout_below="@+id/appBar"
         android:id="@+id/recycleChat"
         android:layout_width="match_parent"
-        android:layout_height="450dp">
+        android:layout_height="650dp">
 
     </android.support.v7.widget.RecyclerView>
     <EditText
         android:id="@+id/enterMessage"
-        android:layout_below="@+id/recycleChat"
-        android:layout_marginTop="20dp"
-        android:layout_width="280dp"
 
+        android:layout_alignParentBottom="true"
+        android:layout_width="280dp"
         android:hint="Enter Message"
-        android:layout_height="100dp" />
+        android:layout_height="wrap_content" />
     <Button
         android:id="@+id/send"
         android:text="Send"

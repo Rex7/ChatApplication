@@ -32,8 +32,11 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".HomePage">
+        <activity android:name=".MainActivity"
+            >
+
+        </activity>
+        <activity android:name=".LoginPage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -4,9 +4,20 @@ public class Message {
     private int userId;
     private String message;
 
-    public Message(int userId, String message) {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    private String name;
+
+    public Message(int userId, String message,String name ){
         this.userId = userId;
         this.message = message;
+        this.name=name;
     }
 
     public int getUserId() {

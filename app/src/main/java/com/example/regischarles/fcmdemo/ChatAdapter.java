@@ -12,9 +12,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 public class ChatAdapter  extends RecyclerView.Adapter<ChatAdapter.ViewHolders>  {
-    ArrayList<Message> chatMessages;
+   private ArrayList<Message> chatMessages;
     private int SELF=100;
-    Context ctx;
+  private  Context ctx;
     SessionManage sessionManage;
     public ChatAdapter(ArrayList<Message> chatMessages, Context mainActivity) {
         this.chatMessages=chatMessages;
@@ -60,6 +60,7 @@ public class ChatAdapter  extends RecyclerView.Adapter<ChatAdapter.ViewHolders> 
     public void onBindViewHolder(@NonNull ChatAdapter.ViewHolders viewHolders, int i) {
         Message message = chatMessages.get(i);
         viewHolders.message.setText(message.getMessage());
+        viewHolders.timestamp.setText("- "+message.getName());
 
 
     }

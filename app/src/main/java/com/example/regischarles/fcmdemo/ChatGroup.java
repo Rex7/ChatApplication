@@ -12,6 +12,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -50,6 +51,9 @@ public class ChatGroup extends AppCompatActivity  implements View.OnClickListene
     EditText enterMessage;
     SessionManage sessionManage;
     BroadcastReceiver broadcastReceiver;
+    Toolbar toolbar;
+    int dataCount;
+    String chatRoomName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +62,24 @@ public class ChatGroup extends AppCompatActivity  implements View.OnClickListene
         recyclerView=findViewById(R.id.recycleChat);
         send=findViewById(R.id.send);
         enterMessage=findViewById(R.id.enterMessage);
+        toolbar=findViewById(R.id.toolbarChatGroup);
         sessionManage = new SessionManage(getApplicationContext());
         send.setOnClickListener(this);
+        //setting toolbar
+        setSupportActionBar(toolbar);
+        if(getSupportActionBar()!=null){
+            getSupportActionBar().setTitle(getIntent().getExtras().getString("chatRoom"));
+            chatRoomName=getIntent().getExtras().getString("chatRoom");
+        }
+
+
+
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         chatRoom=getIntent().getExtras().getString("chatRoom");
         chatRoomId=getIntent().getExtras().getInt("name");
+
+
 
         //setting a empty adpater
 
@@ -80,23 +97,27 @@ public class ChatGroup extends AppCompatActivity  implements View.OnClickListene
 
                 try {
                     JSONArray jsonArray = new JSONArray(response);
+                    Log.v("ChatGroup","Length"+jsonArray.length());
+                    dataCount=jsonArray.length();
 
 
 
-                    for(int i=0;i<jsonArray.length();i++)
-                    {
-                        JSONObject jobject = jsonArray.getJSONObject(i);
+                    if(jsonArray.length()!=0){
+                        for(int i=0;i<jsonArray.length();i++)
+                        {
+                            JSONObject jobject = jsonArray.getJSONObject(i);
 
-                       chatMessages.add(new Message(jobject.getInt("UserId"),jobject.getString("message")));
+                            chatMessages.add(new Message(jobject.getInt("UserId"),jobject.getString("message"),jobject.getString("name")));
+                        }
+                        Log.v("HomePageDemo","ArraySize"+chatMessages.size());
+
+
+                        chatAdapter = new ChatAdapter(chatMessages, ChatGroup.this);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        recyclerView.setAdapter(chatAdapter);
+                        chatAdapter.notifyDataSetChanged();
+                        recyclerView.smoothScrollToPosition(chatAdapter.getItemCount()-1);
                     }
-                    Log.v("HomePageDemo","ArraySize"+chatMessages.size());
-
-
-                    chatAdapter = new ChatAdapter(chatMessages, ChatGroup.this);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    recyclerView.setAdapter(chatAdapter);
-                    chatAdapter.notifyDataSetChanged();
-                    recyclerView.smoothScrollToPosition(chatAdapter.getItemCount()-1);
 
 
 
@@ -164,8 +185,8 @@ broadcastReceiver=new BroadcastReceiver() {
     @Override
     public void onClick(View v) {
         Log.v("payloadData","chat messages"+chatMessages.size());
-        SendRequestToServer sendRequestToServer=new SendRequestToServer(getApplicationContext(),sessionManage,enterMessage.getText().toString(),recyclerView,chatAdapter,chatMessages);
-        sendRequestToServer.sendToServer();
+        SendRequestToServer sendRequestToServer=new SendRequestToServer(getApplicationContext(),sessionManage,enterMessage.getText().toString(),recyclerView,chatAdapter,chatMessages,chatRoomId);
+        sendRequestToServer.sendToServer(dataCount,chatRoomName);
 
         enterMessage.setText("");
 
@@ -175,12 +196,15 @@ broadcastReceiver=new BroadcastReceiver() {
     private void handlePush(Intent intent){
         String message=intent.getExtras().getString("message");
         String title=intent.getExtras().getString("title");
-        int userId=Integer.parseInt(title);
-            chatMessages.add(new Message(userId,message));
+        String name=intent.getExtras().getString("name");
+        if(dataCount!=0) {
+            int userId = Integer.parseInt(title);
+            chatMessages.add(new Message(userId, message, name));
             chatAdapter.notifyDataSetChanged();
-            recyclerView.smoothScrollToPosition(chatAdapter.getItemCount()-1);
-            Toast.makeText(getApplicationContext(),"message"+message,Toast.LENGTH_LONG).show();
-        Log.v("payloadData","babe"+message);
+            recyclerView.smoothScrollToPosition(chatAdapter.getItemCount() - 1);
+            Toast.makeText(getApplicationContext(), "message" + message, Toast.LENGTH_LONG).show();
+        }
+
 
 
 
